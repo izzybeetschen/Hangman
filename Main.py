@@ -5,18 +5,23 @@ class Game:
     # Initialise the Word class
     def __init__(self):
         self.word = Word()
+        self.output = []
 
     def game(self):
         pass
 
     # Runs the game
     def start(self):
+        found = []
         print("Welcome to Hangman!")
         word_length = input(print("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
                                   "value: "))
         new_word = self.word_length(word_length)
         print("_ " * int(word_length))
         guess = input(print("Please guess a letter: "))
+        x = self.guess(guess)
+        if x == guess:
+            self.find_word(guess, new_word)
 
     def word_length(self, word_length):
         new_word = 0
@@ -43,8 +48,15 @@ class Game:
         else:
             return 1
 
-    def find_word(self, letter):
-        pass
+    def find_word(self, letter, word):
+        word_array = []
+        y = 0
+        for x in word:
+            word_array.append(x)
+            if x == letter:
+                self.output[y] = letter + " "
+            else:
+                self.output[y] = "_ "
 
 
 class Word:
