@@ -7,29 +7,26 @@ class Game:
         self.word = Word()
         self.output = []
 
-    def game(self):
-        pass
-
     # Runs the game
     def start(self):
         found = []
         bad_guess = 0
         print("Welcome to Hangman!")
-        word_length = input(print("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
-                                  "value: "))
+        word_length = input("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
+                                  "value: ")
         new_word = self.word_length(word_length)
         for new_letter in new_word:
             self.output.append("_ ")
         print(self.output)
         while "_ " in self.output:
-            guess = input(print("Please guess a letter: "))
+            guess = input("Please guess a letter: ")
             x = self.guess(guess)
             if x == guess:
                 z = self.find_word(guess, new_word)
                 if z == 0:
                     print("Incorrect. This letter is not in the word")
                     bad_guess += 1
-                    print(str(bad_guess) + " incorrect guess of 10")
+                    print(str(bad_guess) + " incorrect guesses of 10")
                 elif z == 1:
                     print(str(self.output))
             elif bad_guess == 10:
@@ -42,6 +39,7 @@ class Game:
         print("Congratulations! You did it!")
         print("The word was " + new_word)
 
+    # Sets the length of the word required
     def word_length(self, word_length):
         new_word = 0
         if word_length == "3":
@@ -53,13 +51,13 @@ class Game:
         else:
             print("Error")
             exit()
-        return new_word
+        return new_word # Returns the chosen word
 
     @staticmethod
     def guess(letter):
         alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                    'u', 'v', 'w', 'x', 'y', 'z']
-        guessed = []
+                    'u', 'v', 'w', 'x', 'y', 'z']  # An array of the letters in the alphabet
+        guessed = []  # An array of all guessed letters
         if letter in guessed:
             return 0
         elif letter in alphabet:
