@@ -5,7 +5,7 @@ class Game:
     # Initialise the Word class
     def __init__(self):
         self.word = Word()
-        self.output = ["_ "]
+        self.output = []
 
     def game(self):
         pass
@@ -18,7 +18,9 @@ class Game:
         word_length = input(print("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
                                   "value: "))
         new_word = self.word_length(word_length)
-        print("_ " * int(word_length))
+        for new_letter in new_word:
+            self.output.append("_ ")
+        print(self.output)
         while "_ " in self.output:
             guess = input(print("Please guess a letter: "))
             x = self.guess(guess)
@@ -37,6 +39,8 @@ class Game:
                 print("You have already guessed this letter.")
             elif x == 1:
                 print("Invalid input.")
+        print("Congratulations! You did it!")
+        print("The word was " + new_word)
 
     def word_length(self, word_length):
         new_word = 0
@@ -73,8 +77,7 @@ class Game:
             if x == letter:
                 self.output[y] = letter + " "
                 z = True
-            else:
-                self.output[y] = "_ "
+            y += 1
         if z is False:
             return 0
         elif z is True:
