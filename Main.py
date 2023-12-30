@@ -1,4 +1,17 @@
 import random
+import pygame
+
+
+class GUI:
+    def initialise(self):
+        pygame.init()
+        pygame.display.set_mode((400, 500))
+        running = True
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
 
 class Game:
@@ -9,13 +22,12 @@ class Game:
 
     # Runs the game
     def start(self):
-        found = []
         bad_guess = 0
         print("Welcome to Hangman!")
         word_length = input("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
-                                  "value: ")
+                            "value: ")
         new_word = self.word_length(word_length)
-        for new_letter in new_word:
+        for _ in new_word:
             self.output.append("_ ")
         print(self.output)
         while "_ " in self.output:
@@ -51,7 +63,7 @@ class Game:
         else:
             print("Error")
             exit()
-        return new_word # Returns the chosen word
+        return new_word  # Returns the chosen word
 
     @staticmethod
     def guess(letter):
@@ -111,4 +123,6 @@ class Word:
 
 if __name__ == '__main__':
     game = Game()
-    game.start()
+    # game.start()
+    gui = GUI()
+    gui.initialise()
