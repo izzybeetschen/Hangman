@@ -7,53 +7,63 @@ class GUI:
     def initialise(self):
         pygame.init()  # initialises pygame
         surface = pygame.display.set_mode((800, 800))  # sets the box size
-        width = surface.get_width()
-        height = surface.get_height()
         font = pygame.font.SysFont('americantypewriter', 30)
+        clock = pygame.time.Clock()
         pygame.display.set_caption('Hangman')
         background_colour = (0, 0, 0)
         running = True  # sets running to true
         surface.fill(background_colour)
         pygame.display.flip()
-
-        title, text_rect1 = self.text_int('Hangman', font, 400, 20)
-        a, a_rect = self.text_int('a', font, 50, 600)
-        b, b_rect = self.text_int('b', font, 100, 600)
-        c, c_rect = self.text_int('c', font, 150, 600)
-        d, d_rect = self.text_int('d', font, 200, 600)
-        e, e_rect = self.text_int('e', font, 250, 600)
-        f, f_rect = self.text_int('f', font, 300, 600)
-        g, g_rect = self.text_int('g', font, 350, 600)
+        user_text = ''
+        input_rect = pygame.Rect(200, 200, 140, 32)
+        color_active = pygame.Color(255, 255, 255)
+        color_passive = pygame.Color(200, 200, 200)
+        color = color_passive
+        active = False
 
         while running:
-            surface.fill((0, 0, 0))
-            surface.blit(title, text_rect1)
-            surface.blit(b, b_rect)
-            surface.blit(c, c_rect)
-            surface.blit(d, d_rect)
-            surface.blit(e, e_rect)
-            surface.blit(f, f_rect)
-            surface.blit(g, g_rect)
-            mouse = pygame.mouse.get_pos()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if width / 2 <= mouse[0] <= width / 2 + 140 and height / 2 <= mouse[1] <= height / 2 + 40:
-                        pass
+                    if input_rect.collidepoint(event.pos):
+                        active = True
+                    else:
+                        active = False
 
-            if width / 2 <= mouse[0] <= width / 2 + 140 and height / 2 <= mouse[1] <= height / 2 + 40:
-                pygame.draw.rect(surface, background_colour, [width / 2, height / 2, 140, 40])
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_text = user_text[:-1]
+                    else:
+                        user_text += event.unicode
 
+            if active:
+                color = color_active
             else:
-                a = font.render('a', True, (200, 200, 200))
-                pygame.draw.rect(surface, background_colour, [width / 2, height / 2, 140, 40])
+                color = color_passive
 
-                # superimposing the text onto our button
-            surface.blit(a, (width / 2 + 50, height / 2))
+            pygame.draw.rect(surface, color, input_rect)
 
-            pygame.display.update()
+            text_surface = font.render(user_text, True, (0, 0, 0))
+
+            # render at position stated in arguments
+            surface.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+
+            # set width of textfield so that text cannot get
+            # outside of user's text input
+            input_rect.w = max(100, text_surface.get_width() + 10)
+
+            # display.flip() will update only a portion of the
+            # screen to updated, not full area
+            pygame.display.flip()
+
+            # clock.tick(60) means that for every second at most
+            # 60 frames should be passed.
+            clock.tick(60)
+
+        pygame.display.update()
 
     @staticmethod
     def text_int(text, font, x, y):
