@@ -3,16 +3,40 @@ import pygame
 
 
 class GUI:
+
     def initialise(self):
-        pygame.init()
-        pygame.display.set_mode((400, 500))
-        running = True
+        pygame.init()  # initialises pygame
+        surface = pygame.display.set_mode((800, 800))  # sets the box size
+        font = pygame.font.SysFont('americantypewriter', 30)
+        pygame.display.set_caption('Hangman')
+        background_colour = (0, 0, 0)
+        running = True  # sets running to true
+        surface.fill(background_colour)
+        pygame.display.flip()
+
+        title, textRect1 = self.text_int('Hangman', font, 400, 20)
+        a, aRect = self.text_int('a', font, 50, 600)
+        b, bRect = self.text_int('b', font, 100, 600)
+        c, cRect = self.text_int('c', font, 150, 600)
 
         while running:
+            surface.fill((0, 0, 0))
+            surface.blit(title, textRect1)
+            surface.blit(a, aRect)
+            surface.blit(b, bRect)
+            surface.blit(c, cRect)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
+            pygame.display.update()
+
+    def text_int(self, text, font, x, y):
+        letter = font.render(text, True, (255, 255, 255))
+        letter_rect = letter.get_rect()
+        letter_rect.center = (x, y)
+        return letter, letter_rect
 
 class Game:
     # Initialise the Word class
