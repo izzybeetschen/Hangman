@@ -15,7 +15,7 @@ class GUI:
         surface.fill(background_colour)
         pygame.display.flip()
         user_text = ''
-        input_rect = pygame.Rect(200, 200, 140, 32)
+        input_rect = pygame.Rect(350, 600, 50, 32)
         color_active = pygame.Color(255, 255, 255)
         color_passive = pygame.Color(200, 200, 200)
         color = color_passive
@@ -49,7 +49,7 @@ class GUI:
             text_surface = font.render(user_text, True, (0, 0, 0))
 
             # render at position stated in arguments
-            surface.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+            surface.blit(text_surface, (input_rect.x, input_rect.y))
 
             # set width of textfield so that text cannot get
             # outside of user's text input
