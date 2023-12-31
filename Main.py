@@ -7,6 +7,8 @@ class GUI:
     def initialise(self):
         pygame.init()  # initialises pygame
         surface = pygame.display.set_mode((800, 800))  # sets the box size
+        width = surface.get_width()
+        height = surface.get_height()
         font = pygame.font.SysFont('americantypewriter', 30)
         pygame.display.set_caption('Hangman')
         background_colour = (0, 0, 0)
@@ -14,29 +16,52 @@ class GUI:
         surface.fill(background_colour)
         pygame.display.flip()
 
-        title, textRect1 = self.text_int('Hangman', font, 400, 20)
-        a, aRect = self.text_int('a', font, 50, 600)
-        b, bRect = self.text_int('b', font, 100, 600)
-        c, cRect = self.text_int('c', font, 150, 600)
+        title, text_rect1 = self.text_int('Hangman', font, 400, 20)
+        a, a_rect = self.text_int('a', font, 50, 600)
+        b, b_rect = self.text_int('b', font, 100, 600)
+        c, c_rect = self.text_int('c', font, 150, 600)
+        d, d_rect = self.text_int('d', font, 200, 600)
+        e, e_rect = self.text_int('e', font, 250, 600)
+        f, f_rect = self.text_int('f', font, 300, 600)
+        g, g_rect = self.text_int('g', font, 350, 600)
 
         while running:
             surface.fill((0, 0, 0))
-            surface.blit(title, textRect1)
-            surface.blit(a, aRect)
-            surface.blit(b, bRect)
-            surface.blit(c, cRect)
+            surface.blit(title, text_rect1)
+            surface.blit(b, b_rect)
+            surface.blit(c, c_rect)
+            surface.blit(d, d_rect)
+            surface.blit(e, e_rect)
+            surface.blit(f, f_rect)
+            surface.blit(g, g_rect)
+            mouse = pygame.mouse.get_pos()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if width / 2 <= mouse[0] <= width / 2 + 140 and height / 2 <= mouse[1] <= height / 2 + 40:
+                        pass
+
+            if width / 2 <= mouse[0] <= width / 2 + 140 and height / 2 <= mouse[1] <= height / 2 + 40:
+                pygame.draw.rect(surface, background_colour, [width / 2, height / 2, 140, 40])
+
+            else:
+                a = font.render('a', True, (200, 200, 200))
+                pygame.draw.rect(surface, background_colour, [width / 2, height / 2, 140, 40])
+
+                # superimposing the text onto our button
+            surface.blit(a, (width / 2 + 50, height / 2))
 
             pygame.display.update()
 
-    def text_int(self, text, font, x, y):
+    @staticmethod
+    def text_int(text, font, x, y):
         letter = font.render(text, True, (255, 255, 255))
         letter_rect = letter.get_rect()
         letter_rect.center = (x, y)
         return letter, letter_rect
+
 
 class Game:
     # Initialise the Word class
