@@ -3,16 +3,19 @@ import pygame
 
 
 class GUI:
+    def __init__(self):
+        self.surface = None
+        self.game = Game()
 
     def initialise(self):
-        pygame.init()  # initialises pygame
-        surface = pygame.display.set_mode((800, 800))  # sets the box size
+        pygame.init()
+        self.surface = pygame.display.set_mode((800, 800))
         font = pygame.font.SysFont('americantypewriter', 30)
         clock = pygame.time.Clock()
         pygame.display.set_caption('Hangman')
         background_colour = (0, 0, 0)
-        running = True  # sets running to true
-        surface.fill(background_colour)
+        running = True
+        self.surface.fill(background_colour)
         pygame.display.flip()
         user_text = ''
         input_rect = pygame.Rect(350, 600, 50, 32)
@@ -20,9 +23,9 @@ class GUI:
         color_passive = pygame.Color(200, 200, 200)
         color = color_passive
         active = False
+        self.game.start()
 
         while running:
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -36,6 +39,9 @@ class GUI:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE:
                         user_text = user_text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        text = user_text
+                        user_text = ' '
                     else:
                         user_text += event.unicode
 
@@ -44,23 +50,11 @@ class GUI:
             else:
                 color = color_passive
 
-            pygame.draw.rect(surface, color, input_rect)
-
+            pygame.draw.rect(self.surface, color, input_rect)
             text_surface = font.render(user_text, True, (0, 0, 0))
-
-            # render at position stated in arguments
-            surface.blit(text_surface, (input_rect.x, input_rect.y))
-
-            # set width of textfield so that text cannot get
-            # outside of user's text input
+            self.surface.blit(text_surface, (input_rect.x, input_rect.y))
             input_rect.w = max(100, text_surface.get_width() + 10)
-
-            # display.flip() will update only a portion of the
-            # screen to updated, not full area
             pygame.display.flip()
-
-            # clock.tick(60) means that for every second at most
-            # 60 frames should be passed.
             clock.tick(60)
 
         pygame.display.update()
@@ -72,24 +66,39 @@ class GUI:
         letter_rect.center = (x, y)
         return letter, letter_rect
 
+    def display_empty_letter(self, output):
+        location = 100
+        for z in output:
+            text, text_rect = self.each_display(z)
+            text_rect.center = (location, 500)
+            location += 50  # Adjust the spacing between letters
+            self.surface.blit(text, text_rect)  # Blit the text onto the main surface
+        pygame.display.update()
+
+    def each_display(self, x):
+        font = pygame.font.SysFont('americantypewriter', 30)
+        text = font.render(x, True, (255, 255, 255))
+        text_rect = text.get_rect()
+        return text, text_rect
+
 
 class Game:
     # Initialise the Word class
     def __init__(self):
+        self.goo = GUI()
         self.word = Word()
         self.output = []
+        self.surface = self.goo.surface
 
     # Runs the game
     def start(self):
         bad_guess = 0
-        print("Welcome to Hangman!")
-        word_length = input("Please choose a level. Choose a word length from 3 - 5 by inputting the correct "
-                            "value: ")
+        word_length = "5"
         new_word = self.word_length(word_length)
         for _ in new_word:
-            self.output.append("_ ")
-        print(self.output)
-        while "_ " in self.output:
+            self.goo.display_empty_letter(self.output)
+            self.output.append("_")
+        while "_" in self.output:
             guess = input("Please guess a letter: ")
             x = self.guess(guess)
             if x == guess:
@@ -182,6 +191,4 @@ class Word:
 
 if __name__ == '__main__':
     game = Game()
-    # game.start()
-    gui = GUI()
-    gui.initialise()
+    game.start()
