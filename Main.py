@@ -8,14 +8,14 @@ def Play():
     surface = pygame.display.set_mode((800, 800))
     font = pygame.font.SysFont('americantypewriter', 30)
     clock = pygame.time.Clock()
+    word_length_num = "5"
+    new_word = word_length(word_length_num)
 
     user_text = ''
     output = []
     bad_guess = 0
     round_val = 0
     x_coord = 300
-    word_length_num = "5"
-    new_word = word_length(word_length_num)
     score_array = []
     score_rect_array = []
     for _ in new_word:
@@ -28,13 +28,14 @@ def Play():
         score_rect_array.append(score_rect)
         print(score_array)
 
-
-
     background_colour = (0, 0, 0)
     input_rect = pygame.Rect(350, 600, 50, 32)
     color_active = pygame.Color(255, 255, 255)
     color_passive = pygame.Color(200, 200, 200)
     color = color_passive
+    same_guess = font.render('Already made this guess', True, (255, 255, 255))
+    same_guess_rect = same_guess.get_rect()
+    same_guess_rect.center = (350, 750)
 
     pygame.display.set_caption('Hangman')
     surface.fill(background_colour)
@@ -51,6 +52,8 @@ def Play():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif bad_guess >= 10:
+                running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if input_rect.collidepoint(event.pos):
@@ -62,10 +65,13 @@ def Play():
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
-                    text = user_text
+                    guess_made = guess(user_text)
+                    if guess_made == 0:
+
                     user_text = ' '
                 else:
                     user_text += event.unicode
+
 
         if active:
             color = color_active
@@ -75,7 +81,7 @@ def Play():
         pygame.draw.rect(surface, color, input_rect)
         text_surface = font.render(user_text, True, (0, 0, 0))
         surface.blit(text_surface, (input_rect.x, input_rect.y))
-        input_rect.w = max(100, text_surface.get_width() + 10)
+        input_rect.w = max(1, text_surface.get_width() + 10)
         pygame.display.flip()
         clock.tick(60)
 
@@ -103,15 +109,33 @@ def text_int(text1, font1, x, y):
     return letter, letter_rect
 
 
-"""def display_empty_letter(output):
-    location = 100
-    play = Play()
-    for z in output:
-        text2, text_rect = each_display(z)
-        text_rect.center = (location, 500)
-        location += 50  # Adjust the spacing between letters
-        play.surface.blit(text2, text_rect)  # Blit the text onto the main surface
-    pygame.display.update()"""
+def guess(letter):
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+                'u', 'v', 'w', 'x', 'y', 'z']  # An array of the letters in the alphabet
+    guessed = []  # An array of all guessed letters
+    if letter in guessed:
+        return 0
+    elif letter in alphabet:
+        guessed.append(letter)
+        return letter
+    else:
+        return 1
+
+
+def find_word(self, letter, word):
+    word_array = []
+    y = 0
+    z = False
+    for x in word:
+        word_array.append(x)
+        if x == letter:
+            self.output[y] = letter + " "
+            z = True
+        y += 1
+    if z is False:
+        return 0
+    elif z is True:
+        return 1
 
 
 def each_display(x):
@@ -180,34 +204,6 @@ def five_letter():
         print("The word was " + new_word)
 
     # Sets the length of the word required
-
-    @staticmethod
-    def guess(letter):
-        alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                    'u', 'v', 'w', 'x', 'y', 'z']  # An array of the letters in the alphabet
-        guessed = []  # An array of all guessed letters
-        if letter in guessed:
-            return 0
-        elif letter in alphabet:
-            guessed.append(letter)
-            return letter
-        else:
-            return 1
-
-    def find_word(self, letter, word):
-        word_array = []
-        y = 0
-        z = False
-        for x in word:
-            word_array.append(x)
-            if x == letter:
-                self.output[y] = letter + " "
-                z = True
-            y += 1
-        if z is False:
-            return 0
-        elif z is True:
-            return 1
 
 
 if __name__ == '__main__':
