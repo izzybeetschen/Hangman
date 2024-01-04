@@ -13,6 +13,7 @@ def Play():
 
     user_text = ''
     output = []
+    guessed = []  # An array of all guessed letters
     bad_guess = 0
     round_val = 0
     x_coord = 300
@@ -26,14 +27,13 @@ def Play():
         x_coord += 50
         score_array.append(score)
         score_rect_array.append(score_rect)
-        print(score_array)
 
     background_colour = (0, 0, 0)
     input_rect = pygame.Rect(350, 600, 50, 32)
     color_active = pygame.Color(255, 255, 255)
     color_passive = pygame.Color(200, 200, 200)
-    color = color_passive
     same_guess = font.render('Already made this guess', True, (255, 255, 255))
+    same_guess_overwrite = font.render('Already made this', True, (0, 0, 0))
     same_guess_rect = same_guess.get_rect()
     same_guess_rect.center = (350, 750)
 
@@ -43,6 +43,7 @@ def Play():
 
     running = True
     active = False
+    guessed_text = False
 
     while running:
         while round_val < 5:
@@ -65,13 +66,19 @@ def Play():
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
-                    guess_made = guess(user_text)
+                    guess_made = guess(user_text, guessed)
+                    guessed.append(guess_made)
+                    guessed_text = False
                     if guess_made == 0:
-
-                    user_text = ' '
+                        guessed_text = True
+                        surface.blit(same_guess, same_guess_rect)
+                    elif guess_made == 1:
+                        guessed_text = False
+                    else:
+                        guessed_text = False
+                    user_text = ''
                 else:
                     user_text += event.unicode
-
 
         if active:
             color = color_active
@@ -109,14 +116,12 @@ def text_int(text1, font1, x, y):
     return letter, letter_rect
 
 
-def guess(letter):
+def guess(letter, guessed):
     alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z']  # An array of the letters in the alphabet
-    guessed = []  # An array of all guessed letters
     if letter in guessed:
         return 0
     elif letter in alphabet:
-        guessed.append(letter)
         return letter
     else:
         return 1
