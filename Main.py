@@ -33,9 +33,9 @@ def Play():
     color_active = pygame.Color(255, 255, 255)
     color_passive = pygame.Color(200, 200, 200)
     same_guess = font.render('Already made this guess', True, (255, 255, 255))
-    same_guess_overwrite = font.render('Already made this', True, (0, 0, 0))
     same_guess_rect = same_guess.get_rect()
     same_guess_rect.center = (350, 750)
+    same_guess_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
     surface.fill(background_colour)
@@ -43,7 +43,6 @@ def Play():
 
     running = True
     active = False
-    guessed_text = False
 
     while running:
         while round_val < 5:
@@ -68,13 +67,12 @@ def Play():
                 elif event.key == pygame.K_RETURN:
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
-                    guessed_text = False
                     if guess_made == 0:
-                        guessed_text = True
                         surface.blit(same_guess, same_guess_rect)
                     elif guess_made == 1:
-                        guessed_text = False
+                        pygame.draw.rect(surface, (0, 0, 0), same_guess_cover)
                     else:
+                        pygame.draw.rect(surface, (0, 0, 0), same_guess_cover)
                         guessed_text = False
                     user_text = ''
                 else:
