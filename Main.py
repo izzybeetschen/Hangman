@@ -32,10 +32,10 @@ def Play():
     input_rect = pygame.Rect(350, 600, 50, 32)
     color_active = pygame.Color(255, 255, 255)
     color_passive = pygame.Color(200, 200, 200)
-    same_guess = font.render('Already made this guess', True, (255, 255, 255))
-    same_guess_rect = same_guess.get_rect()
-    same_guess_rect.center = (350, 750)
-    same_guess_cover = pygame.Rect(0, 700, 800, 100)
+    same_guess, same_guess_rect = text_int("Already made this guess", font, 350, 750)
+    correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
+    invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
+    text_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
     surface.fill(background_colour)
@@ -68,12 +68,13 @@ def Play():
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
                     if guess_made == 0:
+                        pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         surface.blit(same_guess, same_guess_rect)
                     elif guess_made == 1:
-                        pygame.draw.rect(surface, (0, 0, 0), same_guess_cover)
+                        pygame.draw.rect(surface, (0, 0, 0), text_cover)
+                        surface.blit(invalid_guess, invalid_guess_rect)
                     else:
-                        pygame.draw.rect(surface, (0, 0, 0), same_guess_cover)
-                        guessed_text = False
+                        pygame.draw.rect(surface, (0, 0, 0), text_cover)
                     user_text = ''
                 else:
                     user_text += event.unicode
@@ -171,46 +172,5 @@ def five_letter():
              "zooms"]
     val = random.randrange(0, (len(words) - 1))
     return words[val]
-
-
-"""class Game:
-    # Initialise the Word class
-    def __init__(self):
-        self.output = []
-
-    # Runs the game
-    def start(self):
-        bad_guess = 0
-        word_length = "5"
-        new_word = self.word_length(word_length)
-        for _ in new_word:
-            self.output.append("_")
-        while "_" in self.output:
-            guess = input("Please guess a letter: ")
-            x = self.guess(guess)
-            if x == guess:
-                z = self.find_word(guess, new_word)
-                if z == 0:
-                    print("Incorrect. This letter is not in the word")
-                    bad_guess += 1
-                    print(str(bad_guess) + " incorrect guesses of 10")
-                elif z == 1:
-                    print(str(self.output))
-            elif bad_guess == 10:
-                print("Sorry, too many incorrect guesses. The word was " + new_word)
-                exit()
-            elif x == 0:
-                print("You have already guessed this letter.")
-            elif x == 1:
-                print("Invalid input.")
-        print("Congratulations! You did it!")
-        print("The word was " + new_word)
-
-    # Sets the length of the word required
-
-
-if __name__ == '__main__':
-    game = Game()
-    game.start() """
 
 Play()
