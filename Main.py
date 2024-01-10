@@ -35,6 +35,7 @@ def Play():
     same_guess, same_guess_rect = text_int("Already made this guess", font, 350, 750)
     correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
+    not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font,350, 750)
     text_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
@@ -75,6 +76,12 @@ def Play():
                         surface.blit(invalid_guess, invalid_guess_rect)
                     else:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
+                        correct_word = find_word(user_text, new_word)
+                        if correct_word == 0:  # not in word
+                            pygame.draw.rect(surface, (0, 0, 0), text_cover)
+                            surface.blit(not_in_word, not_in_word_rect)
+                        elif correct_word == 1:  # in word
+                            pass
                     user_text = ''
                 else:
                     user_text += event.unicode
@@ -126,14 +133,13 @@ def guess(letter, guessed):
         return 1
 
 
-def find_word(self, letter, word):
+def find_word(letter, word):
     word_array = []
     y = 0
     z = False
     for x in word:
         word_array.append(x)
         if x == letter:
-            self.output[y] = letter + " "
             z = True
         y += 1
     if z is False:
@@ -170,6 +176,7 @@ def five_letter():
              "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "ranch", "stink", "stick",
              "store", "turnt", "tombs", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "yours",
              "zooms"]
+
     val = random.randrange(0, (len(words) - 1))
     return words[val]
 
