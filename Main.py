@@ -21,7 +21,7 @@ def Play():
     hangman_8 = pygame.image.load("Hangman-Images/Hangman-8.png").convert_alpha()
     hangman_9 = pygame.image.load("Hangman-Images/Hangman-9.png").convert_alpha()
     hangman_10 = pygame.image.load("Hangman-Images/Hangman-10.png").convert_alpha()
-    image_cover = pygame.Rect(400, 200, 800, 300)
+    image_cover = pygame.Rect(0, 150, 800, 300)
 
     letter_array = []
     letter_array_rect = []
@@ -57,6 +57,7 @@ def Play():
     correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
     not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font,350, 750)
+    real_word, real_word_rect = text_int("Sorry, the word was " + new_word, font, 350, 750)
     text_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
@@ -70,6 +71,10 @@ def Play():
         while round_val < 5:
             surface.blit(score_array[round_val], score_rect_array[round_val])
             round_val += 1
+
+        if bad_guess == 10:
+            pygame.draw.rect(surface, (0, 0, 0), text_cover)
+            surface.blit(real_word, real_word_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -101,43 +106,43 @@ def Play():
                             surface.blit(not_in_word, not_in_word_rect)
                             if bad_guess == 0:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_1, (400, 200))
+                                surface.blit(hangman_1, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 1:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_2, (400, 200))
+                                surface.blit(hangman_2, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 2:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_3, (400, 200))
+                                surface.blit(hangman_3, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 3:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_4, (400, 200))
+                                surface.blit(hangman_4, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 4:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_5, (400, 200))
+                                surface.blit(hangman_5, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 5:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_6, (400, 200))
+                                surface.blit(hangman_6, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 6:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_7, (400, 200))
+                                surface.blit(hangman_7, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 7:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_8, (400, 200))
+                                surface.blit(hangman_8, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 8:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_9, (400, 200))
+                                surface.blit(hangman_9, (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 9:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_10, (400, 200))
+                                surface.blit(hangman_10, (300, 175))
                                 bad_guess += 1
                         elif correct_word == 1:  # in word
                             location = find_location(guess_made, new_word)
