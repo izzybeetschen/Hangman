@@ -11,6 +11,17 @@ def Play():
     word_length_num = "5"
     new_word = word_length(word_length_num)
 
+    letter_array = []
+    letter_array_rect = []
+    x_coord = 300
+    for letter in new_word:
+        letter_val, letter_rect = text_int(letter, font, x_coord, 500)
+        x_coord += 50
+        letter_array.append(letter_val)
+        letter_array_rect.append(letter_rect)
+
+    letter_1, letter_2, letter_3, letter_4, letter_5 = False, False, False, False, False
+
     user_text = ''
     output = []
     guessed = []  # An array of all guessed letters
@@ -68,6 +79,7 @@ def Play():
                 elif event.key == pygame.K_RETURN:
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
+                    print(guess_made)
                     if guess_made == 0:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         surface.blit(same_guess, same_guess_rect)
@@ -81,7 +93,9 @@ def Play():
                             pygame.draw.rect(surface, (0, 0, 0), text_cover)
                             surface.blit(not_in_word, not_in_word_rect)
                         elif correct_word == 1:  # in word
-                            pass
+                            location = find_location(guess_made, new_word)
+                            for num in location:
+                                surface.blit(letter_array[num], letter_array_rect[num])
                     user_text = ''
                 else:
                     user_text += event.unicode
@@ -146,6 +160,16 @@ def find_word(letter, word):
         return 0
     elif z is True:
         return 1
+
+
+def find_location(letter, word):
+    location = []
+    y = 0
+    for x in word:
+        if x == letter:
+            location.append(y)
+        y += 1
+    return location
 
 
 def each_display(x):
