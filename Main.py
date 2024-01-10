@@ -11,6 +11,18 @@ def Play():
     word_length_num = "5"
     new_word = word_length(word_length_num)
 
+    hangman_1 = pygame.image.load("Hangman-Images/Hangman-1.png").convert_alpha()
+    hangman_2 = pygame.image.load("Hangman-Images/Hangman-2.png").convert_alpha()
+    hangman_3 = pygame.image.load("Hangman-Images/Hangman-3.png").convert_alpha()
+    hangman_4 = pygame.image.load("Hangman-Images/Hangman-4.png").convert_alpha()
+    hangman_5 = pygame.image.load("Hangman-Images/Hangman-5.png").convert_alpha()
+    hangman_6 = pygame.image.load("Hangman-Images/Hangman-6.png").convert_alpha()
+    hangman_7 = pygame.image.load("Hangman-Images/Hangman-7.png").convert_alpha()
+    hangman_8 = pygame.image.load("Hangman-Images/Hangman-8.png").convert_alpha()
+    hangman_9 = pygame.image.load("Hangman-Images/Hangman-9.png").convert_alpha()
+    hangman_10 = pygame.image.load("Hangman-Images/Hangman-10.png").convert_alpha()
+    image_cover = pygame.Rect(400, 200, 800, 300)
+
     letter_array = []
     letter_array_rect = []
     x_coord = 300
@@ -19,8 +31,6 @@ def Play():
         x_coord += 50
         letter_array.append(letter_val)
         letter_array_rect.append(letter_rect)
-
-    letter_1, letter_2, letter_3, letter_4, letter_5 = False, False, False, False, False
 
     user_text = ''
     output = []
@@ -64,8 +74,6 @@ def Play():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif bad_guess >= 10:
-                running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if input_rect.collidepoint(event.pos):
@@ -79,7 +87,6 @@ def Play():
                 elif event.key == pygame.K_RETURN:
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
-                    print(guess_made)
                     if guess_made == 0:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         surface.blit(same_guess, same_guess_rect)
@@ -92,6 +99,46 @@ def Play():
                         if correct_word == 0:  # not in word
                             pygame.draw.rect(surface, (0, 0, 0), text_cover)
                             surface.blit(not_in_word, not_in_word_rect)
+                            if bad_guess == 0:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_1, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 1:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_2, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 2:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_3, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 3:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_4, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 4:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_5, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 5:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_6, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 6:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_7, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 7:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_8, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 8:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_9, (400, 200))
+                                bad_guess += 1
+                            elif bad_guess == 9:
+                                pygame.draw.rect(surface, (0, 0, 0), image_cover)
+                                surface.blit(hangman_10, (400, 200))
+                                bad_guess += 1
                         elif correct_word == 1:  # in word
                             location = find_location(guess_made, new_word)
                             for num in location:
