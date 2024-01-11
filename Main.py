@@ -1,5 +1,13 @@
 import random
 import pygame
+from enum import Enum
+
+
+class GameState(Enum):
+    SAME_GUESS = 0
+    INVALID_GUESS = 1
+    NOT_IN_WORD = 2
+    IN_WORD = 3
 
 
 def Play():
@@ -38,6 +46,7 @@ def Play():
     bad_guess = 0
     round_val = 0
     x_coord = 300
+    letters_guessed = 0
     score_array = []
     score_rect_array = []
     for _ in new_word:
@@ -58,6 +67,7 @@ def Play():
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
     not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font,350, 750)
     real_word, real_word_rect = text_int("Sorry, the word was " + new_word, font, 350, 750)
+    correct_word_text, correct_word_text_rect = text_int("You did it! Congrats!", font, 350, 750)
     text_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
@@ -76,6 +86,9 @@ def Play():
             pygame.draw.rect(surface, (0, 0, 0), text_cover)
             surface.blit(real_word, real_word_rect)
 
+        if letters_guessed == len(new_word):
+            surface.blit(correct_word_text, correct_word_text_rect)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -92,16 +105,16 @@ def Play():
                 elif event.key == pygame.K_RETURN:
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
-                    if guess_made == 0:
+                    if guess_made == GameState.SAME_GUESS:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         surface.blit(same_guess, same_guess_rect)
-                    elif guess_made == 1:
+                    elif guess_made == GameState.INVALID_GUESS:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         surface.blit(invalid_guess, invalid_guess_rect)
                     else:
                         pygame.draw.rect(surface, (0, 0, 0), text_cover)
                         correct_word = find_word(user_text, new_word)
-                        if correct_word == 0:  # not in word
+                        if correct_word == GameState.NOT_IN_WORD:  # not in word
                             pygame.draw.rect(surface, (0, 0, 0), text_cover)
                             surface.blit(not_in_word, not_in_word_rect)
                             if bad_guess == 0:
@@ -144,9 +157,10 @@ def Play():
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
                                 surface.blit(hangman_10, (300, 175))
                                 bad_guess += 1
-                        elif correct_word == 1:  # in word
+                        elif correct_word == GameState.IN_WORD:  # in word
                             location = find_location(guess_made, new_word)
                             for num in location:
+                                letters_guessed += 1
                                 surface.blit(letter_array[num], letter_array_rect[num])
                     user_text = ''
                 else:
@@ -192,11 +206,11 @@ def guess(letter, guessed):
     alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z']  # An array of the letters in the alphabet
     if letter in guessed:
-        return 0
+        return GameState.SAME_GUESS
     elif letter in alphabet:
         return letter
     else:
-        return 1
+        return GameState.INVALID_GUESS
 
 
 def find_word(letter, word):
@@ -209,9 +223,9 @@ def find_word(letter, word):
             z = True
         y += 1
     if z is False:
-        return 0
+        return GameState.NOT_IN_WORD
     elif z is True:
-        return 1
+        return GameState.IN_WORD
 
 
 def find_location(letter, word):
