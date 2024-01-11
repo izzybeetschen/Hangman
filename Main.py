@@ -19,16 +19,7 @@ def Play():
     word_length_num = "5"
     new_word = word_length(word_length_num)
 
-    hangman_1 = pygame.image.load("Hangman-Images/Hangman-1.png").convert_alpha()
-    hangman_2 = pygame.image.load("Hangman-Images/Hangman-2.png").convert_alpha()
-    hangman_3 = pygame.image.load("Hangman-Images/Hangman-3.png").convert_alpha()
-    hangman_4 = pygame.image.load("Hangman-Images/Hangman-4.png").convert_alpha()
-    hangman_5 = pygame.image.load("Hangman-Images/Hangman-5.png").convert_alpha()
-    hangman_6 = pygame.image.load("Hangman-Images/Hangman-6.png").convert_alpha()
-    hangman_7 = pygame.image.load("Hangman-Images/Hangman-7.png").convert_alpha()
-    hangman_8 = pygame.image.load("Hangman-Images/Hangman-8.png").convert_alpha()
-    hangman_9 = pygame.image.load("Hangman-Images/Hangman-9.png").convert_alpha()
-    hangman_10 = pygame.image.load("Hangman-Images/Hangman-10.png").convert_alpha()
+    hangman_images = load_hangman_images()
     image_cover = pygame.Rect(0, 150, 800, 300)
 
     letter_array = []
@@ -49,14 +40,7 @@ def Play():
     letters_guessed = 0
     score_array = []
     score_rect_array = []
-    for _ in new_word:
-        output.append("_")
-        score = font.render('_', True, (255, 255, 255))
-        score_rect = score.get_rect()
-        score_rect.center = (x_coord, 500)
-        x_coord += 50
-        score_array.append(score)
-        score_rect_array.append(score_rect)
+    score_array, score_rect_array = new_word_print(new_word, score_array, score_rect_array, output, font, x_coord)
 
     background_colour = (0, 0, 0)
     input_rect = pygame.Rect(350, 600, 50, 32)
@@ -65,7 +49,7 @@ def Play():
     same_guess, same_guess_rect = text_int("Already made this guess", font, 350, 750)
     correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
-    not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font,350, 750)
+    not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font, 350, 750)
     real_word, real_word_rect = text_int("Sorry, the word was " + new_word, font, 350, 750)
     correct_word_text, correct_word_text_rect = text_int("You did it! Congrats!", font, 350, 750)
     text_cover = pygame.Rect(0, 700, 800, 100)
@@ -119,49 +103,50 @@ def Play():
                             surface.blit(not_in_word, not_in_word_rect)
                             if bad_guess == 0:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_1, (300, 175))
+                                surface.blit(hangman_images[0], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 1:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_2, (300, 175))
+                                surface.blit(hangman_images[1], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 2:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_3, (300, 175))
+                                surface.blit(hangman_images[2], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 3:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_4, (300, 175))
+                                surface.blit(hangman_images[3], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 4:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_5, (300, 175))
+                                surface.blit(hangman_images[4], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 5:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_6, (300, 175))
+                                surface.blit(hangman_images[5], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 6:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_7, (300, 175))
+                                surface.blit(hangman_images[6], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 7:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_8, (300, 175))
+                                surface.blit(hangman_images[7], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 8:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_9, (300, 175))
+                                surface.blit(hangman_images[8], (300, 175))
                                 bad_guess += 1
                             elif bad_guess == 9:
                                 pygame.draw.rect(surface, (0, 0, 0), image_cover)
-                                surface.blit(hangman_10, (300, 175))
+                                surface.blit(hangman_images[9], (300, 175))
                                 bad_guess += 1
                         elif correct_word == GameState.IN_WORD:  # in word
                             location = find_location(guess_made, new_word)
                             for num in location:
                                 letters_guessed += 1
                                 surface.blit(letter_array[num], letter_array_rect[num])
+                            surface.blit(correct_guess, correct_guess_rect)
                     user_text = ''
                 else:
                     user_text += event.unicode
@@ -238,6 +223,22 @@ def find_location(letter, word):
     return location
 
 
+def new_word_print(new_word, score_array, score_rect_array, output, font, x_coord):
+    for _ in new_word:
+        output.append("_")
+        score = font.render('_', True, (255, 255, 255))
+        score_rect = score.get_rect()
+        score_rect.center = (x_coord, 500)
+        x_coord += 50
+        score_array.append(score)
+        score_rect_array.append(score_rect)
+    return score_array, score_rect_array
+
+
+def load_hangman_images():
+    return [pygame.image.load(f"Hangman-Images/Hangman-{i}.png").convert_alpha() for i in range(1, 11)]
+
+
 def each_display(x):
     font2 = pygame.font.SysFont('americantypewriter', 30)
     text3 = font2.render(x, True, (255, 255, 255))
@@ -269,5 +270,6 @@ def five_letter():
 
     val = random.randrange(0, (len(words) - 1))
     return words[val]
+
 
 Play()
