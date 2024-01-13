@@ -66,9 +66,11 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
 
         if bad_guess == 10:
             event_text(surface, real_word, real_word_rect, text_cover)
+            end_state(running)
 
         if letters_guessed == len(new_word):
             surface.blit(correct_word_text, correct_word_text_rect)
+            end_state(running)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -218,6 +220,15 @@ def each_display(x):
     text3 = font2.render(x, True, (255, 255, 255))
     text_rect = text3.get_rect()
     return text3, text_rect
+
+
+def end_state(running):
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                Play()
 
 
 def three_letter():
