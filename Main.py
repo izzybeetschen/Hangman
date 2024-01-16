@@ -253,17 +253,31 @@ def five_letter():
 
 def menu_state():
     surface = pygame.display.set_mode((800, 800))
-    play_button = pygame.Rect(300, 200, 200, 50)
-
     font = pygame.font.SysFont('americantypewriter', 30)
+
+    play_button = pygame.Rect(275, 250, 250, 50)
     play_button_txt = font.render("PLAY", True, (0, 0, 0))
     play_button_txt_rect = play_button_txt.get_rect(center=play_button.center)
+
+    how_to_button = pygame.Rect(275, 400, 250, 50)
+    how_button_txt = font.render("HOW TO PLAY", True, (0, 0, 0))
+    how_button_txt_rect = how_button_txt.get_rect(center=how_to_button.center)
+
+    quit_button = pygame.Rect(275, 550, 250, 50)
+    quit_button_text = font.render("QUIT", True, (0, 0, 0))
+    quit_button_txt_rect = quit_button_text.get_rect(center=quit_button.center)
 
     menu_run = True
 
     while menu_run:
         pygame.draw.rect(surface, (255, 255, 255), play_button)
+        pygame.draw.rect(surface, (255, 255, 255), how_to_button)
+        pygame.draw.rect(surface, (255, 255, 255), quit_button)
+
         surface.blit(play_button_txt, play_button_txt_rect)
+        surface.blit(how_button_txt, how_button_txt_rect)
+        surface.blit(quit_button_text, quit_button_txt_rect)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu_run = False
@@ -272,7 +286,15 @@ def menu_state():
                 if play_button.collidepoint(position):
                     Play(surface)
                     menu_run = False
+                elif how_to_button.collidepoint(position):
+                    how_to_play(surface)
+                elif quit_button.collidepoint(position):
+                    menu_run = False
         pygame.display.flip()
+
+
+def how_to_play(surface):
+    pass
 
 
 def game_over_state():
