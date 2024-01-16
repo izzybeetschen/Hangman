@@ -10,10 +10,15 @@ class GameState(Enum):
     IN_WORD = 3
 
 
-def Play():
-    pygame.init()
+class Colours(Enum):
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    YELLOW = (255, 255, 0)
 
-    surface = pygame.display.set_mode((800, 800))
+
+def Play(surface):
     font = pygame.font.SysFont('americantypewriter', 30)
     clock = pygame.time.Clock()
     word_length_num = "5"
@@ -66,11 +71,9 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
 
         if bad_guess == 10:
             event_text(surface, real_word, real_word_rect, text_cover)
-            end_state(running)
 
         if letters_guessed == len(new_word):
             surface.blit(correct_word_text, correct_word_text_rect)
-            end_state(running)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -222,15 +225,6 @@ def each_display(x):
     return text3, text_rect
 
 
-def end_state(running):
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                Play()
-
-
 def three_letter():
     words = ["art", "bag", "cat", "dig", "eye", "fox", "god", "him", "inn", "jam", "kit", "leg", "mat", "nip",
              "oil", "pin", "quo", "rid", "sew", "top", "urn", "van", "win", "yap", "zoo"]
@@ -250,11 +244,40 @@ def five_letter():
              "flame", "gourd", "hired", "index", "itchy", "jokes", "knock", "kayak", "limbo",
              "marks", "nippy", "newly", "naval", "novel", "nerve", "naked", "oxbow", "ovals" "owned", "point",
              "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "ranch", "stink", "stick",
-             "store", "turnt", "tombs", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "yours",
+             "store", "tombs", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "yours",
              "zooms"]
 
     val = random.randrange(0, (len(words) - 1))
     return words[val]
 
 
-Play()
+def menu_state():
+    surface = pygame.display.set_mode((800, 800))
+    play_button = pygame.Rect(300, 200, 200, 50)
+
+    font = pygame.font.SysFont('americantypewriter', 30)
+    play_button_txt = font.render("PLAY", True, (0, 0, 0))
+    play_button_txt_rect = play_button_txt.get_rect(center=play_button.center)
+
+    menu_run = True
+
+    while menu_run:
+        pygame.draw.rect(surface, (255, 255, 255), play_button)
+        surface.blit(play_button_txt, play_button_txt_rect)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menu_run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if play_button.collidepoint(position):
+                    Play(surface)
+                    menu_run = False
+        pygame.display.flip()
+
+
+def game_over_state():
+    pass
+
+
+pygame.init()
+menu_state()
