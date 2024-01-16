@@ -267,9 +267,12 @@ def menu_state():
     quit_button_text = font.render("QUIT", True, (0, 0, 0))
     quit_button_txt_rect = quit_button_text.get_rect(center=quit_button.center)
 
+    title, title_rect = text_int("HANGMAN", font, 400, 100)
+
     menu_run = True
 
     while menu_run:
+        surface.fill((0, 0, 0))
         pygame.draw.rect(surface, (255, 255, 255), play_button)
         pygame.draw.rect(surface, (255, 255, 255), how_to_button)
         pygame.draw.rect(surface, (255, 255, 255), quit_button)
@@ -277,6 +280,7 @@ def menu_state():
         surface.blit(play_button_txt, play_button_txt_rect)
         surface.blit(how_button_txt, how_button_txt_rect)
         surface.blit(quit_button_text, quit_button_txt_rect)
+        surface.blit(title, title_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -284,17 +288,56 @@ def menu_state():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 position = pygame.mouse.get_pos()
                 if play_button.collidepoint(position):
-                    Play(surface)
                     menu_run = False
+                    Play(surface)
                 elif how_to_button.collidepoint(position):
-                    how_to_play(surface)
+                    menu_run = False
+                    surface.fill((0, 0, 0))
+                    how_to_play(surface, font)
+
                 elif quit_button.collidepoint(position):
                     menu_run = False
         pygame.display.flip()
 
 
-def how_to_play(surface):
-    pass
+def how_to_play(surface, font):
+    line1, line1_rect = text_int("HOW TO PLAY", font, 400, 50)
+    line2, line2_rect = text_int("Input a letter into the white text box on the screen.", font, 400, 150)
+    line3, line3_rect = text_int("Press enter to submit this letter guess.", font, 400, 200)
+    line4, line4_rect = text_int("If the guess is correct, it will appear on the screen.", font, 400, 250)
+    line5, line5_rect = text_int("If the guess is invalid, a message will appear.", font, 400, 300)
+    line6, line6_rect = text_int("If the guess is incorrect, part of the hangman will show.", font, 400, 350)
+    line7, line7_rect = text_int("You get 10 incorrect guesses before game over.", font, 400, 400)
+    line8, line8_rect = text_int("GOOD LUCK!", font, 400, 550)
+
+    back_button = pygame.Rect(300, 700, 200, 50)
+    back_button_text = font.render("BACK", True, (0, 0, 0))
+    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
+
+    running = True
+    while running:
+        surface.fill((0, 0, 0))
+        surface.blit(line1, line1_rect)
+        surface.blit(line2, line2_rect)
+        surface.blit(line3, line3_rect)
+        surface.blit(line4, line4_rect)
+        surface.blit(line5, line5_rect)
+        surface.blit(line6, line6_rect)
+        surface.blit(line7, line7_rect)
+        surface.blit(line8, line8_rect)
+
+        pygame.draw.rect(surface, (255, 255, 255), back_button)
+        surface.blit(back_button_text, back_button_text_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if back_button.collidepoint(position):
+                    running = False
+                    menu_state()
+        pygame.display.flip()
 
 
 def game_over_state():
