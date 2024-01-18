@@ -11,17 +11,18 @@ class GameState(Enum):
 
 
 class Colours(Enum):
-    WHITE = (255, 255, 255)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
-    YELLOW = (255, 255, 0)
+    WHITE = 255, 255, 255
+    RED = 255, 0, 0
+    GREEN = 0, 255, 0
+    BLUE = 0, 0, 255
+    YELLOW = 255, 255, 0
+    BLACK = 0, 0, 0
 
 
 def Play(surface):
     font = pygame.font.SysFont('americantypewriter', 30)
     clock = pygame.time.Clock()
-    word_length_num = "5"
+    word_length_num = str(random.randrange(3, 5))
     user_text = ""
     new_word = word_length(word_length_num)
 
@@ -34,9 +35,9 @@ def Play(surface):
 
     score_array, score_rect_array = new_word_print(new_word, score_array, score_rect_array, output, font, x_coord)
 
-    background_colour = (0, 0, 0)
-    input_rect = pygame.Rect(400, 600, 50, 32)
-    color_active = pygame.Color(255, 255, 255)
+    background_colour = pygame.Color(*Colours.BLACK.value)
+    input_rect = pygame.Rect(350, 600, 100, 32)
+    color_active = pygame.Color(*Colours.WHITE.value)
     same_guess, same_guess_rect = text_int("Already made this guess", font, 350, 750)
     correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
@@ -56,16 +57,16 @@ def Play(surface):
               real_word_rect, letters_guessed, new_word, correct_word_text, correct_word_text_rect, input_rect,
               user_text, guessed, same_guess, same_guess_rect, invalid_guess, invalid_guess_rect, not_in_word,
               not_in_word_rect, image_cover, hangman_images, letter_array, letter_array_rect, correct_guess,
-              correct_guess_rect, color_active, font, clock, x)
+              correct_guess_rect, color_active, font, clock, x, word_length_num)
 
 
 def game_loop(running, round_val, surface, score_array, score_rect_array, bad_guess, text_cover, real_word,
               real_word_rect, letters_guessed, new_word, correct_word_text, correct_word_text_rect, input_rect,
               user_text, guessed, same_guess, same_guess_rect, invalid_guess, invalid_guess_rect, not_in_word,
               not_in_word_rect, image_cover, hangman_images, letter_array, letter_array_rect, correct_guess,
-              correct_guess_rect, color_active, font, clock, x):
+              correct_guess_rect, color_active, font, clock, x, word_length_num):
     while running:
-        while round_val < 5:
+        while round_val < int(word_length_num):
             surface.blit(score_array[round_val], score_rect_array[round_val])
             round_val += 1
 
@@ -83,6 +84,7 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
+                    user_text = user_text.lower()
                     guess_made = guess(user_text, guessed)
                     guessed.append(guess_made)
                     if guess_made == GameState.SAME_GUESS:
@@ -108,19 +110,114 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
                             if letters_guessed != len(new_word):
                                 event_text(surface, correct_guess, correct_guess_rect, text_cover)
                             elif letters_guessed == len(new_word):
-                                pygame.draw.rect(surface, (0, 0, 0), text_cover)
+                                pygame.draw.rect(surface, pygame.Color(*Colours.BLACK.value), text_cover)
                     user_text = ''
                 else:
                     user_text += event.unicode
 
         pygame.draw.rect(surface, color_active, input_rect)
-        text_surface = font.render(user_text, True, (0, 0, 0))
+        text_surface = font.render(user_text, True, pygame.Color(*Colours.BLACK.value))
         surface.blit(text_surface, (input_rect.x, input_rect.y))
         input_rect.w = max(1, text_surface.get_width() + 10)
         pygame.display.flip()
         clock.tick(60)
 
         pygame.display.update()
+
+
+def menu_state():
+    surface = pygame.display.set_mode((800, 800))
+    font = pygame.font.SysFont('americantypewriter', 30)
+    title_font = pygame.font.SysFont('americantypewriter', 60)
+    how_to_font = pygame.font.SysFont('americantypewriter', 25)
+
+    play_button = pygame.Rect(275, 250, 250, 50)
+    play_button_txt = font.render("PLAY", True, (pygame.Color(*Colours.BLACK.value)))
+    play_button_txt_rect = play_button_txt.get_rect(center=play_button.center)
+
+    how_to_button = pygame.Rect(275, 400, 250, 50)
+    how_button_txt = font.render("HOW TO PLAY", True, pygame.Color(*Colours.BLACK.value))
+    how_button_txt_rect = how_button_txt.get_rect(center=how_to_button.center)
+
+    quit_button = pygame.Rect(275, 550, 250, 50)
+    quit_button_text = font.render("QUIT", True, pygame.Color(*Colours.BLACK.value))
+    quit_button_txt_rect = quit_button_text.get_rect(center=quit_button.center)
+
+    title, title_rect = text_int("HANGMAN", title_font, 400, 100)
+
+    menu_run = True
+
+    while menu_run:
+        surface.fill((0, 0, 0))
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), play_button)
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), how_to_button)
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), quit_button)
+
+        surface.blit(play_button_txt, play_button_txt_rect)
+        surface.blit(how_button_txt, how_button_txt_rect)
+        surface.blit(quit_button_text, quit_button_txt_rect)
+        surface.blit(title, title_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menu_run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if play_button.collidepoint(position):
+                    menu_run = False
+                    Play(surface)
+                elif how_to_button.collidepoint(position):
+                    menu_run = False
+                    surface.fill(pygame.Color(*Colours.BLACK.value))
+                    how_to_play(surface, font, how_to_font)
+
+                elif quit_button.collidepoint(position):
+                    menu_run = False
+        pygame.display.flip()
+
+
+def how_to_play(surface, title, font):
+    line1, line1_rect = text_int("HOW TO PLAY", title, 400, 50)
+    line2, line2_rect = text_int("Input a letter into the white text box on the screen.", font, 400, 150)
+    line3, line3_rect = text_int("Press enter to submit this letter guess.", font, 400, 200)
+    line4, line4_rect = text_int("If the guess is correct, it will appear on the screen.", font, 400, 250)
+    line5, line5_rect = text_int("If the guess is invalid, a message will appear.", font, 400, 300)
+    line6, line6_rect = text_int("If the guess is incorrect, part of the hangman will show.", font, 400, 350)
+    line7, line7_rect = text_int("You get 10 incorrect guesses before game over.", font, 400, 400)
+    line8, line8_rect = text_int("GOOD LUCK!", font, 400, 550)
+
+    back_button = pygame.Rect(300, 700, 200, 50)
+    back_button_text = title.render("BACK", True, pygame.Color(*Colours.BLACK.value))
+    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
+
+    running = True
+    while running:
+        surface.fill(pygame.Color(*Colours.BLACK.value))
+        surface.blit(line1, line1_rect)
+        surface.blit(line2, line2_rect)
+        surface.blit(line3, line3_rect)
+        surface.blit(line4, line4_rect)
+        surface.blit(line5, line5_rect)
+        surface.blit(line6, line6_rect)
+        surface.blit(line7, line7_rect)
+        surface.blit(line8, line8_rect)
+
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), back_button)
+        surface.blit(back_button_text, back_button_text_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if back_button.collidepoint(position):
+                    running = False
+                    menu_state()
+        pygame.display.flip()
+
+
+def game_over_state():
+    pass
 
 
 def word_length(word_length_val):
@@ -137,7 +234,7 @@ def word_length(word_length_val):
 
 
 def text_int(text1, font1, x, y):
-    letter = font1.render(text1, True, (255, 255, 255))
+    letter = font1.render(text1, True, pygame.Color(*Colours.WHITE.value))
     letter_rect = letter.get_rect()
     letter_rect.center = (x, y)
     return letter, letter_rect
@@ -182,7 +279,7 @@ def find_location(letter, word):
 def new_word_print(new_word, score_array, score_rect_array, output, font, x_coord):
     for _ in new_word:
         output.append("_")
-        score = font.render('_', True, (255, 255, 255))
+        score = font.render('_', True, pygame.Color(*Colours.WHITE.value))
         score_rect = score.get_rect()
         score_rect.center = (x_coord, 500)
         x_coord += 50
@@ -201,7 +298,7 @@ def print_new_word_letters(new_word, x_coord, letter_array, letter_array_rect, f
 
 
 def event_text(surface, text, rect, text_cover):
-    pygame.draw.rect(surface, (0, 0, 0), text_cover)
+    pygame.draw.rect(surface, pygame.Color(*Colours.BLACK.value), text_cover)
     surface.blit(text, rect)
 
 
@@ -220,7 +317,7 @@ def load_hangman_images():
 
 def each_display(x):
     font2 = pygame.font.SysFont('americantypewriter', 30)
-    text3 = font2.render(x, True, (255, 255, 255))
+    text3 = font2.render(x, True, pygame.Color(*Colours.WHITE.value))
     text_rect = text3.get_rect()
     return text3, text_rect
 
@@ -249,99 +346,6 @@ def five_letter():
 
     val = random.randrange(0, (len(words) - 1))
     return words[val]
-
-
-def menu_state():
-    surface = pygame.display.set_mode((800, 800))
-    font = pygame.font.SysFont('americantypewriter', 30)
-
-    play_button = pygame.Rect(275, 250, 250, 50)
-    play_button_txt = font.render("PLAY", True, (0, 0, 0))
-    play_button_txt_rect = play_button_txt.get_rect(center=play_button.center)
-
-    how_to_button = pygame.Rect(275, 400, 250, 50)
-    how_button_txt = font.render("HOW TO PLAY", True, (0, 0, 0))
-    how_button_txt_rect = how_button_txt.get_rect(center=how_to_button.center)
-
-    quit_button = pygame.Rect(275, 550, 250, 50)
-    quit_button_text = font.render("QUIT", True, (0, 0, 0))
-    quit_button_txt_rect = quit_button_text.get_rect(center=quit_button.center)
-
-    title, title_rect = text_int("HANGMAN", font, 400, 100)
-
-    menu_run = True
-
-    while menu_run:
-        surface.fill((0, 0, 0))
-        pygame.draw.rect(surface, (255, 255, 255), play_button)
-        pygame.draw.rect(surface, (255, 255, 255), how_to_button)
-        pygame.draw.rect(surface, (255, 255, 255), quit_button)
-
-        surface.blit(play_button_txt, play_button_txt_rect)
-        surface.blit(how_button_txt, how_button_txt_rect)
-        surface.blit(quit_button_text, quit_button_txt_rect)
-        surface.blit(title, title_rect)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                menu_run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                position = pygame.mouse.get_pos()
-                if play_button.collidepoint(position):
-                    menu_run = False
-                    Play(surface)
-                elif how_to_button.collidepoint(position):
-                    menu_run = False
-                    surface.fill((0, 0, 0))
-                    how_to_play(surface, font)
-
-                elif quit_button.collidepoint(position):
-                    menu_run = False
-        pygame.display.flip()
-
-
-def how_to_play(surface, font):
-    line1, line1_rect = text_int("HOW TO PLAY", font, 400, 50)
-    line2, line2_rect = text_int("Input a letter into the white text box on the screen.", font, 400, 150)
-    line3, line3_rect = text_int("Press enter to submit this letter guess.", font, 400, 200)
-    line4, line4_rect = text_int("If the guess is correct, it will appear on the screen.", font, 400, 250)
-    line5, line5_rect = text_int("If the guess is invalid, a message will appear.", font, 400, 300)
-    line6, line6_rect = text_int("If the guess is incorrect, part of the hangman will show.", font, 400, 350)
-    line7, line7_rect = text_int("You get 10 incorrect guesses before game over.", font, 400, 400)
-    line8, line8_rect = text_int("GOOD LUCK!", font, 400, 550)
-
-    back_button = pygame.Rect(300, 700, 200, 50)
-    back_button_text = font.render("BACK", True, (0, 0, 0))
-    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
-
-    running = True
-    while running:
-        surface.fill((0, 0, 0))
-        surface.blit(line1, line1_rect)
-        surface.blit(line2, line2_rect)
-        surface.blit(line3, line3_rect)
-        surface.blit(line4, line4_rect)
-        surface.blit(line5, line5_rect)
-        surface.blit(line6, line6_rect)
-        surface.blit(line7, line7_rect)
-        surface.blit(line8, line8_rect)
-
-        pygame.draw.rect(surface, (255, 255, 255), back_button)
-        surface.blit(back_button_text, back_button_text_rect)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                position = pygame.mouse.get_pos()
-                if back_button.collidepoint(position):
-                    running = False
-                    menu_state()
-        pygame.display.flip()
-
-
-def game_over_state():
-    pass
 
 
 pygame.init()
