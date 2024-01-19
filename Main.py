@@ -147,8 +147,16 @@ def menu_state():
 
     menu_run = True
 
+    menu_loop(menu_run, surface, play_button, how_to_button, quit_button, play_button_txt, play_button_txt_rect,
+              how_button_txt, how_button_txt_rect, quit_button_text, quit_button_txt_rect, title, title_rect, font,
+              how_to_font)
+
+
+def menu_loop(menu_run, surface, play_button, how_to_button, quit_button, play_button_txt, play_button_txt_rect,
+              how_button_txt, how_button_txt_rect, quit_button_text, quit_button_txt_rect, title, title_rect, font,
+              how_to_font):
     while menu_run:
-        surface.fill((0, 0, 0))
+        surface.fill(pygame.Color(*Colours.BLACK.value))
         pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), play_button)
         pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), how_to_button)
         pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), quit_button)
@@ -191,6 +199,15 @@ def how_to_play(surface, title, font):
     back_button_text_rect = back_button_text.get_rect(center=back_button.center)
 
     running = True
+
+    how_to_loop(running, surface, line1, line2, line3, line4, line5, line6, line7, line8, line1_rect, line2_rect,
+                line3_rect, line4_rect, line5_rect, line6_rect, line7_rect, line8_rect, back_button, back_button_text,
+                back_button_text_rect)
+
+
+def how_to_loop(running, surface, line1, line2, line3, line4, line5, line6, line7, line8, line1_rect, line2_rect,
+                line3_rect, line4_rect, line5_rect, line6_rect, line7_rect, line8_rect, back_button, back_button_text,
+                back_button_text_rect):
     while running:
         surface.fill(pygame.Color(*Colours.BLACK.value))
         surface.blit(line1, line1_rect)
