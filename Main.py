@@ -22,7 +22,7 @@ class Colours(Enum):
 def Play(surface):
     font = pygame.font.SysFont('americantypewriter', 30)
     clock = pygame.time.Clock()
-    word_length_num = str(random.randrange(3, 5))
+    word_length_num = str(random.randrange(3, 6))
     user_text = ""
     new_word = word_length(word_length_num)
 
@@ -30,7 +30,8 @@ def Play(surface):
     image_cover = pygame.Rect(0, 150, 800, 300)
 
     score_array, score_rect_array, output, guessed, letter_array, letter_array_rect = [], [], [], [], [], []
-    x_coord, bad_guess, round_val, letters_guessed = 322, 0, 0, 0
+    bad_guess, round_val, letters_guessed = 0, 0, 0
+    x_coord = x_length_coord(word_length_num)
     letter_array, letter_array_rect = print_new_word_letters(new_word, x_coord, letter_array, letter_array_rect, font)
 
     score_array, score_rect_array = new_word_print(new_word, score_array, score_rect_array, output, font, x_coord)
@@ -42,8 +43,6 @@ def Play(surface):
     correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
     invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
     not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font, 350, 750)
-    real_word, real_word_rect = text_int("Sorry, the word was " + new_word, font, 350, 750)
-    correct_word_text, correct_word_text_rect = text_int("You did it! Congrats!", font, 350, 750)
     text_cover = pygame.Rect(0, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
@@ -51,36 +50,45 @@ def Play(surface):
     pygame.display.flip()
     x = 150
 
+    return_menu = pygame.Rect(50, 700, 100, 50)
+    return_menu_text = font.render("MENU", True, pygame.Color(*Colours.BLACK.value))
+    return_menu_text_rect = return_menu_text.get_rect(center=return_menu.center)
+
     running = True
 
-    game_loop(running, round_val, surface, score_array, score_rect_array, bad_guess, text_cover, real_word,
-              real_word_rect, letters_guessed, new_word, correct_word_text, correct_word_text_rect, input_rect,
-              user_text, guessed, same_guess, same_guess_rect, invalid_guess, invalid_guess_rect, not_in_word,
-              not_in_word_rect, image_cover, hangman_images, letter_array, letter_array_rect, correct_guess,
-              correct_guess_rect, color_active, font, clock, x, word_length_num)
+    game_loop(running, round_val, surface, score_array, score_rect_array, bad_guess, text_cover, letters_guessed,
+              new_word, input_rect, user_text, guessed, same_guess, same_guess_rect, invalid_guess,
+              invalid_guess_rect, not_in_word, not_in_word_rect, image_cover, hangman_images, letter_array,
+              letter_array_rect, correct_guess, correct_guess_rect, color_active, font, clock, x, word_length_num,
+              return_menu, return_menu_text, return_menu_text_rect)
 
 
-def game_loop(running, round_val, surface, score_array, score_rect_array, bad_guess, text_cover, real_word,
-              real_word_rect, letters_guessed, new_word, correct_word_text, correct_word_text_rect, input_rect,
-              user_text, guessed, same_guess, same_guess_rect, invalid_guess, invalid_guess_rect, not_in_word,
-              not_in_word_rect, image_cover, hangman_images, letter_array, letter_array_rect, correct_guess,
-              correct_guess_rect, color_active, font, clock, x, word_length_num):
+def game_loop(running, round_val, surface, score_array, score_rect_array, bad_guess, text_cover, letters_guessed,
+              new_word, input_rect, user_text, guessed, same_guess, same_guess_rect, invalid_guess,
+              invalid_guess_rect, not_in_word, not_in_word_rect, image_cover, hangman_images, letter_array,
+              letter_array_rect, correct_guess, correct_guess_rect, color_active, font, clock, x, word_length_num,
+              return_menu, return_menu_text, return_menu_text_rect):
     while running:
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), return_menu)
+        surface.blit(return_menu_text, return_menu_text_rect)
+
         while round_val < int(word_length_num):
             surface.blit(score_array[round_val], score_rect_array[round_val])
             round_val += 1
 
         if bad_guess == 10:
-            event_text(surface, real_word, real_word_rect, text_cover)
             running = False
             game_over_state(surface, font, False, new_word)
-
-        if letters_guessed == len(new_word):
-            surface.blit(correct_word_text, correct_word_text_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if return_menu.collidepoint(position):
+                    running = False
+                    menu_state()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
@@ -254,12 +262,20 @@ def game_over_state(surface, font, win, correct_word):
     play_again_text = font.render("PLAY AGAIN", True, pygame.Color(*Colours.BLACK.value))
     play_again_text_rect = play_again_text.get_rect(center=play_again.center)
 
-    menu_button = pygame.Rect(100, 400, 200, 50)
+    menu_button = pygame.Rect(500, 400, 200, 50)
     menu_text = font.render("MENU", True, pygame.Color(*Colours.BLACK.value))
     menu_text_rect = menu_text.get_rect(center=menu_button.center)
 
     game_over_run = True
 
+    game_over_loop(game_over_run, surface, game_over, game_over_rect, win_text, win_text_rect, correct_word_text,
+                   play_again, play_again_text, correct_word_rect, play_again_text_rect, menu_text, menu_button,
+                   menu_text_rect)
+
+
+def game_over_loop(game_over_run, surface, game_over, game_over_rect, win_text, win_text_rect, correct_word_text,
+                   play_again, play_again_text, correct_word_rect, play_again_text_rect, menu_text, menu_button,
+                   menu_text_rect):
     while game_over_run:
         surface.fill(pygame.Color(*Colours.BLACK.value))
         surface.blit(game_over, game_over_rect)
@@ -390,11 +406,11 @@ def each_display(x):
 
 def x_length_coord(length):
     if length == "3":
-        pass
+        return 345
     if length == "4":
         return 322
     if length == "5":
-        pass
+        return 295
 
 
 def three_letter():
@@ -442,9 +458,9 @@ def five_letter():
              "knock", "kayak", "kicks", "kills", "limbo", "loops", "likes",
              "marks", "nippy", "newly", "naval", "novel", "nerve", "naked", "north",
              "oxbow", "ovals" "owned", "point",
-             "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "royal", "ranch", "stink", "stick", "south",
-             "store", "sigma", "tombs", "think", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "which", "witch",
-             "yours", "zooms"]
+             "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "royal", "ranch", "stink", "stick",
+             "south", "store", "sigma", "tombs", "think", "unify", "ulcer", "upset", "under", "views", "voice", "wound",
+             "which", "witch", "yours", "zooms"]
 
     val = random.randrange(0, (len(words) - 1))
     return words[val]
