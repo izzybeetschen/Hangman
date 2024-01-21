@@ -339,27 +339,63 @@ def each_display(x):
     return text3, text_rect
 
 
+def x_length_coord(length):
+    if length == 3:
+        pass
+    if length == 4:
+        x = 322
+        return x
+    if length == 5:
+        pass
+
 def three_letter():
-    words = ["art", "bag", "cat", "dig", "eye", "fox", "god", "him", "inn", "jam", "kit", "leg", "mat", "nip",
-             "oil", "pin", "quo", "rid", "sew", "top", "urn", "van", "win", "yap", "zoo"]
+    words = ["art", "arm", "aim", "ale", "ape", "all", "are", "any", "and", "ark",
+             "bit", "bat", "bot", "bag", "bam", "ban",
+             "cat", "can", "car", "cut", "cup", "cop",
+             "dig", "den", "dog", "dip", "day",
+             "ent", "eye", "end", "egg",
+             "fox", "fit", "far", "fun", "for", "god", "him", "has", "had", "his", "hat",
+             "her", "inn", "ice", "jam", "kit", "leg", "lip", "lot", "mat", "man", "nip",
+             "oil", "out", "owl", "pin", "quo", "rid", "sew",
+             "top", "the", "too", "urn", "van", "win", "was", "yap", "you", "zoo"]
     val = random.randrange(0, (len(words) - 1))
     return words[val]
 
 
 def four_letter():
-    words = ["able", "bank", "crib", "dart", "echo", "from", "grab", "high", "jump", "kill", "lime", "nope", "open",
-             "pony", "quip", "rose", "stew", "tear", "ulna", "view", "wear", "year", "zero", "zoom"]
+    words = ["able", "arch", "also", "ache", "anti", "bank", "bars", "been", "bent", "ball", "bark", "bird", "bump",
+             "crib", "cart", "call", "cell", "came", "card", "calm", "coat", "city", "cold", "care", "cash", "card",
+             "dart", "door", "deal", "duty", "dark", "deep", "damp", "draw", "drop", "dead", "duel", "dull", "down",
+             "echo", "exit", "evil", "even", "ever", "east", "edge", "earn", "easy",
+             "from", "fork", "funk", "five", "face", "fact", "four", "fair", "feel", "fell", "fire", "fine", "fish",
+             "grab", "good", "gear", "game", "girl", "goal", "grow", "give", "gain", "glad", "grey", "grim", "gold",
+             "have", "high", "hint", "hype", "hurt", "hike", "hope", "hips", "help", "hill", "home", "half", "hair",
+             "iron", "into", "idea", "join", "jump", "just",
+             "kill", "kind", "king", "keep", "keen", "lime", "live", "life", "love", "lady", "lack", "line", "list",
+             "much", "many", "mind", "miss", "move", "nope", "nose", "open", "only",
+             "push", "pull", "pony", "plug", "quip", "rose", "rice",
+             "stew", "sell", "sale", "send", "sent", "some", "sort", "tear", "toad", "this",
+             "ulna", "undo", "view", "very", "wear", "warm", "will", "west", "with", "year", "zero", "zoom"]
     val = random.randrange(0, (len(words) - 1))
     return words[val]
 
 
 def five_letter():
-    words = ["acorn", "broom", "blaze", "break", "beach", "cried", "climb", "court", "diary", "dairy", "echos",
-             "flame", "gourd", "hired", "index", "itchy", "jokes", "knock", "kayak", "limbo",
-             "marks", "nippy", "newly", "naval", "novel", "nerve", "naked", "oxbow", "ovals" "owned", "point",
-             "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "ranch", "stink", "stick",
-             "store", "tombs", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "yours",
-             "zooms"]
+    words = ["acorn", "amber", "apple", "annoy", "angry", "aimed", "alpha", "alarm", "alert", "aglow",
+             "broom", "blaze", "break", "beach", "broke",
+             "cried", "climb", "court", "crush", "creep",
+             "diary", "dairy", "dream", "dress",
+             "echos", "empty", "early", "earns", "eagle", "eerie", "easel", "eases", "elbow"
+             "flame", "front", "funky", "fight",
+             "gourd", "grape", "gamer", "gases", "glint", "glows", "grand", "grasp", "grill",
+             "hired", "house", "heart", "hello", "happy", "handy", "hyper", "heaps", "hymns", "hoard", "hobby", "holes",
+             "index", "itchy", "ideas", "igloo", "issue", "jokes", "jacks", "jaded", "jolly", "jelly", "judge",
+             "knock", "kayak", "kicks", "kills", "limbo", "loops", "likes",
+             "marks", "nippy", "newly", "naval", "novel", "nerve", "naked", "north",
+             "oxbow", "ovals" "owned", "point",
+             "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "royal", "ranch", "stink", "stick", "south",
+             "store", "sigma", "tombs", "think", "unify", "ulcer", "upset", "under", "views", "voice", "wound", "which", "witch",
+             "yours", "zooms"]
 
     val = random.randrange(0, (len(words) - 1))
     return words[val]
