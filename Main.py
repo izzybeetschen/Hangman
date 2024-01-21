@@ -72,6 +72,8 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
 
         if bad_guess == 10:
             event_text(surface, real_word, real_word_rect, text_cover)
+            running = False
+            game_over_state(surface, font, False, new_word)
 
         if letters_guessed == len(new_word):
             surface.blit(correct_word_text, correct_word_text_rect)
@@ -111,6 +113,8 @@ def game_loop(running, round_val, surface, score_array, score_rect_array, bad_gu
                                 event_text(surface, correct_guess, correct_guess_rect, text_cover)
                             elif letters_guessed == len(new_word):
                                 pygame.draw.rect(surface, pygame.Color(*Colours.BLACK.value), text_cover)
+                                running = False
+                                game_over_state(surface, font, True, new_word)
                     user_text = ''
                 else:
                     user_text += event.unicode
@@ -233,8 +237,53 @@ def how_to_loop(running, surface, line1, line2, line3, line4, line5, line6, line
         pygame.display.flip()
 
 
-def game_over_state():
-    pass
+def game_over_state(surface, font, win, correct_word):
+    title_font = pygame.font.SysFont('americantypewriter', 60)
+    game_over, game_over_rect = text_int("GAME OVER!", title_font, 400, 50)
+
+    if win:
+        win_text, win_text_rect = text_int("You win!", font, 400, 100)
+    elif not win:
+        win_text, win_text_rect = text_int("You lose!", font, 400, 100)
+    else:
+        win_text, win_text_rect = text_int("Uh oh, something went wrong", font, 400, 100)
+
+    correct_word_text, correct_word_rect = text_int("The correct word was " + correct_word, font, 400, 200)
+
+    play_again = pygame.Rect(100, 400, 200, 50)
+    play_again_text = font.render("PLAY AGAIN", True, pygame.Color(*Colours.BLACK.value))
+    play_again_text_rect = play_again_text.get_rect(center=play_again.center)
+
+    menu_button = pygame.Rect(100, 400, 200, 50)
+    menu_text = font.render("MENU", True, pygame.Color(*Colours.BLACK.value))
+    menu_text_rect = menu_text.get_rect(center=menu_button.center)
+
+    game_over_run = True
+
+    while game_over_run:
+        surface.fill(pygame.Color(*Colours.BLACK.value))
+        surface.blit(game_over, game_over_rect)
+        surface.blit(win_text, win_text_rect)
+        surface.blit(correct_word_text, correct_word_rect)
+
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), play_again)
+        surface.blit(play_again_text, play_again_text_rect)
+
+        pygame.draw.rect(surface, pygame.Color(*Colours.WHITE.value), menu_button)
+        surface.blit(menu_text, menu_text_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over_run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                if menu_button.collidepoint(position):
+                    game_over_run = False
+                    menu_state()
+                if play_again.collidepoint(position):
+                    game_over_run = False
+                    Play(surface)
+        pygame.display.flip()
 
 
 def word_length(word_length_val):
@@ -340,13 +389,13 @@ def each_display(x):
 
 
 def x_length_coord(length):
-    if length == 3:
+    if length == "3":
         pass
-    if length == 4:
-        x = 322
-        return x
-    if length == 5:
+    if length == "4":
+        return 322
+    if length == "5":
         pass
+
 
 def three_letter():
     words = ["art", "arm", "aim", "ale", "ape", "all", "are", "any", "and", "ark",
