@@ -52,11 +52,11 @@ def play(surface):
     background_colour = pygame.Color(*Colours.BLACK.value)
     input_rect = pygame.Rect(350, 600, 100, 32)
     color_active = pygame.Color(*Colours.WHITE.value)
-    same_guess, same_guess_rect = text_int("Already made this guess", font, 350, 750)
-    correct_guess, correct_guess_rect = text_int("Correct guess!", font, 350, 750)
-    invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 350, 750)
-    not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font, 350, 750)
-    text_cover = pygame.Rect(0, 700, 800, 100)
+    same_guess, same_guess_rect = text_int("Already made this guess", font, 400, 750)
+    correct_guess, correct_guess_rect = text_int("Correct guess!", font, 400, 750)
+    invalid_guess, invalid_guess_rect = text_int("Invalid guess. Please try again.", font, 400, 750)
+    not_in_word, not_in_word_rect = text_int("Sorry, this letter is not in the word!", font, 450, 750)
+    text_cover = pygame.Rect(150, 700, 800, 100)
 
     pygame.display.set_caption('Hangman')
     surface.fill(background_colour)
@@ -761,7 +761,7 @@ def five_letter():
              "index", "itchy", "ideas", "igloo", "issue", "jokes", "jacks", "jaded", "jolly", "jelly", "judge",
              "knock", "kayak", "kicks", "kills", "limbo", "loops", "likes",
              "marks", "nippy", "newly", "naval", "novel", "nerve", "naked", "north",
-             "oxbow", "ovals" "owned", "point",
+             "oxbow", "ovals", "owned", "point",
              "prowl", "pants", "proud", "quits", "quilt", "quart", "rants", "round", "royal", "ranch", "stink", "stick",
              "south", "store", "sigma", "tombs", "think", "unify", "ulcer", "upset", "under", "views", "voice", "wound",
              "which", "witch", "yours", "zooms"]
